@@ -778,7 +778,104 @@
             text-align: center;
         }
 
-        /* Smooth scrolling */
+        /* Success Modal Styles */
+        .success-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+        }
+
+        .success-content {
+            background: linear-gradient(145deg, #1a1a1a, #000);
+            margin: 5% auto;
+            padding: 40px;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+            animation: slideIn 0.3s ease-out;
+            text-align: center;
+        }
+
+        .success-content h2 {
+            color: #28a745;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #28a745;
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .success-details {
+            background: rgba(40, 167, 69, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 1px solid rgba(40, 167, 69, 0.2);
+        }
+
+        .success-details h3 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .success-details p {
+            color: #ccc;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .order-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #28a745;
+            background: rgba(40, 167, 69, 0.2);
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            letter-spacing: 2px;
+        }
+
+        .success-btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+        }
+
+        .success-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
         html {
             scroll-behavior: smooth;
         }
@@ -920,6 +1017,30 @@
         </div>
     </div>
 
+    <!-- Success Modal -->
+    <div id="successModal" class="success-modal">
+        <div class="success-content">
+            <span class="close-btn" onclick="closeSuccessModal()">&times;</span>
+            <div class="success-icon">✅</div>
+            <h2 data-en="Payment Successful!" data-ar="تم الدفع بنجاح!">Payment Successful!</h2>
+            
+            <div class="success-details">
+                <h3 data-en="Order Details" data-ar="تفاصيل الطلب">Order Details</h3>
+                <p><span data-en="Product:" data-ar="المنتج:">Product:</span> <span id="success-product-name">Product Name</span></p>
+                <p><span data-en="Amount Paid:" data-ar="المبلغ المدفوع:">Amount Paid:</span> <span id="success-amount">$0.00</span></p>
+                <div class="order-number">
+                    <span data-en="Order Number:" data-ar="رقم الطلب:">Order Number:</span><br>
+                    <span id="success-order-number">KT-12345678</span>
+                </div>
+                <p style="margin-top: 20px; color: #28a745;">
+                    <span data-en="✅ Your order has been confirmed! Check your Discord/email for updates." data-ar="✅ تم تأكيد طلبك! تحقق من الديسكورد/البريد الإلكتروني للحصول على التحديثات.">✅ Your order has been confirmed! Check your Discord/email for updates.</span>
+                </p>
+            </div>
+
+            <button class="success-btn" onclick="closeSuccessModal()" data-en="Continue Shopping" data-ar="متابعة التسوق">Continue Shopping</button>
+        </div>
+    </div>
+
     <!-- Pricing Page Modal -->
     <div id="pricingModal" class="pricing-modal">
         <div class="pricing-content">
@@ -980,7 +1101,7 @@
 
     <script>
         // Configuration
-        const API_BASE_URL = 'https://api.kaidotweaks.com'; // Replace with your backend URL
+        const API_BASE_URL = 'https://your-backend-domain.com'; // Replace with your backend URL
         
         // Global variables
         let currentProductId = '';
@@ -994,7 +1115,7 @@
             currentProductPrice = price;
             
             document.getElementById('payment-product-name').textContent = productName;
-            document.getElementById('payment-price').textContent = `$${(price / 100).toFixed(2)}`;
+            document.getElementById('payment-price').textContent = `${(price / 100).toFixed(2)} SAR`;
             document.getElementById('paymentModal').style.display = 'block';
             document.body.style.overflow = 'hidden';
             
@@ -1101,20 +1222,46 @@
             document.querySelector('.payment-buttons').style.display = 'flex';
         }
 
+        // Success Modal Functions
+        function showSuccessModal(orderNumber, productName, amount) {
+            document.getElementById('success-product-name').textContent = productName;
+            document.getElementById('success-amount').textContent = `${(amount / 100).toFixed(2)}`;
+            document.getElementById('success-order-number').textContent = orderNumber;
+            document.getElementById('successModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('successModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
         // Check for payment status on page load
         window.addEventListener('load', function() {
             const urlParams = new URLSearchParams(window.location.search);
             const orderNumber = urlParams.get('order');
             const status = urlParams.get('status');
             
-            if (orderNumber && status) {
-                if (status === 'success') {
-                    showNotification(`Payment successful! Your order number is: ${orderNumber}`, 'success');
-                } else if (status === 'failed') {
-                    showNotification('Payment failed. Please try again.', 'error');
-                }
+            if (orderNumber && status === 'success') {
+                // Get order details from backend
+                fetch(`${API_BASE_URL}/api/order/${orderNumber}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.orderNumber) {
+                            showSuccessModal(data.orderNumber, data.productName, data.amount);
+                        } else {
+                            showNotification(`✅ Payment successful! Your order number is: ${orderNumber}`, 'success');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching order details:', error);
+                        showNotification(`✅ Payment successful! Your order number is: ${orderNumber}`, 'success');
+                    });
                 
                 // Clean up URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            } else if (orderNumber && status === 'failed') {
+                showNotification('❌ Payment failed. Please try again.', 'error');
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
         });
@@ -1123,11 +1270,14 @@
         window.onclick = function(event) {
             const paymentModal = document.getElementById('paymentModal');
             const pricingModal = document.getElementById('pricingModal');
+            const successModal = document.getElementById('successModal');
             
             if (event.target == paymentModal) {
                 closePaymentModal();
             } else if (event.target == pricingModal) {
                 closePricingPage();
+            } else if (event.target == successModal) {
+                closeSuccessModal();
             }
         }
 
@@ -1240,4 +1390,3 @@
     </script>
 </body>
 </html>
-
