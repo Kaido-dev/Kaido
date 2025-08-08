@@ -980,7 +980,7 @@
 
     <script>
         // Configuration
-        const API_BASE_URL = 'https://your-backend-domain.com'; // Replace with your backend URL
+        const API_BASE_URL = 'https://api.kaidotweaks.com'; // Replace with your backend URL
         
         // Global variables
         let currentProductId = '';
@@ -994,7 +994,7 @@
             currentProductPrice = price;
             
             document.getElementById('payment-product-name').textContent = productName;
-            document.getElementById('payment-price').textContent = `${(price / 100).toFixed(2)} SAR`;
+            document.getElementById('payment-price').textContent = `$${(price / 100).toFixed(2)}`;
             document.getElementById('paymentModal').style.display = 'block';
             document.body.style.overflow = 'hidden';
             
@@ -1240,3 +1240,4 @@
     </script>
 </body>
 </html>
+
