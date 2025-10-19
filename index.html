@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kaido's Webstore</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">    <link rel="shortcut icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAABILAAASCwAAAAAAAAAAAAD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <meta name="msapplication-TileColor" content="#000000">
     <meta name="theme-color" content="#000000">
     <style>
@@ -28,185 +28,382 @@
             padding: 0 20px;
         }
 
-        /* Notification Styles */
-        .notification {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: #dc3545;
-            color: white;
-            padding: 15px;
-            text-align: center;
-            z-index: 10000;
-            display: none;
-            animation: slideDown 0.3s ease-out;
-        }
-
-        .notification.success {
-            background: #28a745;
-        }
-
-        .notification .notification-content {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .notification .close-notification {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-        }
-
-        @keyframes slideDown {
-            from { transform: translateY(-100%); }
-            to { transform: translateY(0); }
-        }
-
-        /* Payment Modal Styles */
-        .payment-modal {
+        /* 3D Product Detail Overlay */
+        .product-detail-overlay {
             display: none;
             position: fixed;
-            z-index: 1000;
+            z-index: 2000;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(15px);
+            animation: fadeInOverlay 0.5s ease-out;
         }
 
-        .payment-content {
-            background: linear-gradient(145deg, #1a1a1a, #000);
-            margin: 5% auto;
-            padding: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        @keyframes fadeInOverlay {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .product-detail-card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) perspective(1000px) rotateX(0deg) rotateY(0deg);
+            width: 400px;
+            height: 600px;
+            background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 20px;
-            width: 90%;
-            max-width: 500px;
-            position: relative;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        .payment-content h2 {
+            padding: 40px;
             color: white;
             text-align: center;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+            animation: slideInCard 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.3s ease, height 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Expanded height for pricing mode */
+        .product-detail-card.pricing-mode {
+            height: 700px;
+            padding: 30px;
+        }
+
+        @keyframes slideInCard {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) perspective(1000px) rotateX(-30deg) rotateY(20deg) translateZ(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px);
+            }
+        }
+
+        /* Grid Background Pattern */
+        .product-detail-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            border-radius: 20px;
+            pointer-events: none;
+        }
+
+        .product-detail-content {
+            position: relative;
+            z-index: 10;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .close-detail-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 20;
+            transition: color 0.3s ease;
+        }
+
+        .close-detail-btn:hover {
+            color: white;
+        }
+
+        .premium-badge {
+            position: absolute;
+            top: 20px;
+            right: 60px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #000;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .brand-header {
             margin-bottom: 30px;
         }
 
-        .payment-form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .form-group label {
-            color: #ccc;
-            font-weight: 500;
-        }
-
-        .form-group input {
-            padding: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-size: 16px;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: rgba(255, 255, 255, 0.5);
-        }
-
-        .payment-summary {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        .payment-summary h3 {
-            color: white;
-            margin-bottom: 10px;
-        }
-
-        .payment-summary p {
-            color: #ccc;
+        .brand-title {
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: 3px;
             margin-bottom: 5px;
+            background: linear-gradient(45deg, #ffffff, #cccccc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .payment-buttons {
+        .brand-subtitle {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .product-icon-large {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: #000;
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+        }
+
+        .product-title-large {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .features-list {
+            list-style: none;
+            padding: 0;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .features-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            animation: slideInFeature 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .features-list li:nth-child(1) { animation-delay: 0.3s; }
+        .features-list li:nth-child(2) { animation-delay: 0.4s; }
+        .features-list li:nth-child(3) { animation-delay: 0.5s; }
+        .features-list li:nth-child(4) { animation-delay: 0.6s; }
+        .features-list li:nth-child(5) { animation-delay: 0.7s; }
+        .features-list li:nth-child(6) { animation-delay: 0.8s; }
+
+        @keyframes slideInFeature {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .features-list li::before {
+            content: '▶';
+            color: white;
+            margin-right: 12px;
+            font-size: 10px;
+        }
+
+        .unlock-message {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+        }
+
+        .detail-actions {
             display: flex;
             gap: 15px;
+            margin-top: 30px;
         }
 
-        .payment-btn {
+        .detail-btn {
             flex: 1;
-            padding: 15px;
+            padding: 12px 20px;
             border: none;
-            border-radius: 8px;
+            border-radius: 25px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
+            font-size: 12px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .payment-btn.primary {
+        .detail-btn.primary {
             background: white;
             color: #000;
         }
 
-        .payment-btn.primary:hover {
+        .detail-btn.primary:hover {
             background: #f0f0f0;
+            transform: translateY(-2px);
         }
 
-        .payment-btn.secondary {
+        .detail-btn.secondary {
             background: transparent;
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        .payment-btn.secondary:hover {
+        .detail-btn.secondary:hover {
             background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.6);
         }
 
-        .loading {
+        /* Pricing panels inside 3D overlay */
+        .pricing-panels {
             display: none;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 15px 0;
             text-align: center;
-            color: #ccc;
         }
 
-        /* Loading spinner */
-        .spinner {
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            border-top: 2px solid white;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-            display: inline-block;
-            margin-right: 10px;
+        .pricing-panel {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 16px 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .pricing-panel:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .pricing-panel.popular {
+            border: 2px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .pricing-panel.popular::before {
+            content: 'POPULAR';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            color: #000;
+            padding: 4px 12px;
+            border-radius: 10px;
+            font-size: 9px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .pricing-panel h4 {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .pricing-panel .price {
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .pricing-panel .duration {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .pricing-panel-btn {
+            width: 100%;
+            padding: 8px 16px;
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: auto;
+        }
+
+        .pricing-panel-btn:hover {
+            background: white;
+            color: #000;
+        }
+
+        /* Adjusted spacing for pricing mode */
+        .product-detail-card.pricing-mode .brand-header {
+            margin-bottom: 20px;
+        }
+
+        .product-detail-card.pricing-mode .product-title-large {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .product-detail-card.pricing-mode .unlock-message {
+            margin-top: 15px;
+            font-size: 10px;
+        }
+
+        /* Hide regular content when showing pricing */
+        .features-list.hidden {
+            display: none;
+        }
+
+        .pricing-panels.visible {
+            display: grid;
         }
 
         /* Header */
@@ -347,12 +544,6 @@
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
-        }
-
-        .logo-container img {
-            width: 80px;
-            height: 80px;
-            object-fit: contain;
         }
 
         .hero h1 {
@@ -584,6 +775,12 @@
             .product-card {
                 padding: 30px;
             }
+
+            .product-detail-card {
+                width: 90%;
+                height: 80%;
+                padding: 30px;
+            }
         }
 
         /* Arabic RTL styles */
@@ -619,165 +816,6 @@
             text-align: center;
         }
 
-        /* Pricing Modal Styles */
-        .pricing-modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
-        }
-
-        .pricing-content {
-            background: linear-gradient(145deg, #1a1a1a, #000);
-            margin: 5% auto;
-            padding: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            width: 90%;
-            max-width: 1200px;
-            position: relative;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-50px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .close-btn {
-            color: white;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .close-btn:hover {
-            color: #ccc;
-        }
-
-        .pricing-content h2 {
-            color: white;
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 2.5rem;
-        }
-
-        .pricing-content > p {
-            color: #ccc;
-            text-align: center;
-            margin-bottom: 40px;
-            font-size: 1.1rem;
-        }
-
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-
-        .pricing-card {
-            background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .pricing-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        .pricing-card.popular {
-            border: 2px solid #fff;
-            transform: scale(1.05);
-        }
-
-        .popular-badge {
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: white;
-            color: #000;
-            padding: 5px 15px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .pricing-card h3 {
-            color: white;
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-        }
-
-        .pricing-card .price {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: white;
-            margin-bottom: 25px;
-        }
-
-        .pricing-card ul {
-            list-style: none;
-            padding: 0;
-            margin-bottom: 30px;
-        }
-
-        .pricing-card li {
-            color: #ccc;
-            margin-bottom: 10px;
-            padding: 5px 0;
-        }
-
-        .pricing-card li:before {
-            content: "✓";
-            color: white;
-            margin-right: 10px;
-            font-weight: bold;
-        }
-
-        .pricing-btn {
-            display: inline-block;
-            padding: 12px 30px;
-            background: white;
-            color: #000;
-            text-decoration: none;
-            border-radius: 25px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            border: none;
-        }
-
-        .pricing-btn:hover {
-            background: #f0f0f0;
-            transform: scale(1.05);
-        }
-
-        .rtl .pricing-card {
-            text-align: center;
-        }
-
-        .rtl .pricing-content {
-            text-align: center;
-        }
-
         /* Smooth scrolling */
         html {
             scroll-behavior: smooth;
@@ -797,13 +835,78 @@
     </style>
 </head>
 <body>
-    <!-- Notification Bar -->
-    <div id="notification" class="notification">
-        <div class="notification-content">
-            <span id="notification-icon">❌</span>
-            <span id="notification-message">Payment Failed</span>
+    <!-- 3D Product Detail Overlay -->
+    <div id="productDetailOverlay" class="product-detail-overlay">
+        <div id="productDetailCard" class="product-detail-card">
+            <button class="close-detail-btn" onclick="closeProductDetail()">&times;</button>
+            <div class="premium-badge">PREMIUM</div>
+            
+            <div class="product-detail-content">
+                <div class="brand-header">
+                    <div class="brand-title">KAIDO</div>
+                    <div class="brand-subtitle">PREMIUM TWEAKS</div>
+                </div>
+                
+                <div class="product-icon-large" id="detailProductIcon">⚡</div>
+                
+                <div class="product-title-large" id="detailProductTitle">
+                    ULTIMATE PERFORMANCE<br>SUITE
+                </div>
+                
+                <ul class="features-list" id="detailFeaturesList">
+                    <li>Custom Windows Optimization</li>
+                    <li>Advanced Fortnite Macros</li>
+                    <li>Manual PC Optimization</li>
+                    <li>Maximum FPS Boost</li>
+                    <li>System Bloat Removal</li>
+                    <li>Professional Support</li>
+                </ul>
+
+                <!-- Pricing Panels for Fortnite Macro -->
+                <div class="pricing-panels" id="pricingPanels">
+                    <div class="pricing-panel" onclick="window.open('https://your-payment-link-1day.com', '_blank')">
+                        <h4>1 Day Key</h4>
+                        <div class="price">$3.00</div>
+                        <div class="duration">24 Hours Access</div>
+                        <a href="https://your-payment-link-1day.com" class="pricing-panel-btn" onclick="event.stopPropagation()">Purchase</a>
+                    </div>
+                    
+                    <div class="pricing-panel" onclick="window.open('https://your-payment-link-1week.com', '_blank')">
+                        <h4>1 Week Key</h4>
+                        <div class="price">$15.00</div>
+                        <div class="duration">7 Days Access</div>
+                        <a href="https://your-payment-link-1week.com" class="pricing-panel-btn" onclick="event.stopPropagation()">Purchase</a>
+                    </div>
+                    
+                    <div class="pricing-panel popular" onclick="window.open('https://your-payment-link-1month.com', '_blank')">
+                        <h4>1 Month Key</h4>
+                        <div class="price">$30.00</div>
+                        <div class="duration">30 Days Access</div>
+                        <a href="https://your-payment-link-1month.com" class="pricing-panel-btn" onclick="event.stopPropagation()">Purchase</a>
+                    </div>
+                    
+                    <div class="pricing-panel" onclick="window.open('https://your-payment-link-lifetime.com', '_blank')">
+                        <h4>Lifetime Key</h4>
+                        <div class="price">$60.00</div>
+                        <div class="duration">Unlimited Access</div>
+                        <a href="https://your-payment-link-lifetime.com" class="pricing-panel-btn" onclick="event.stopPropagation()">Purchase</a>
+                    </div>
+                </div>
+                
+                <div class="unlock-message">
+                    UNLOCK YOUR SYSTEM'S FULL POTENTIAL
+                </div>
+                
+                <div class="detail-actions">
+                    <a href="#" class="detail-btn primary" id="detailPurchaseBtn">
+                        Get Started
+                    </a>
+                    <button class="detail-btn secondary" onclick="closeProductDetail()">
+                        Close
+                    </button>
+                </div>
+            </div>
         </div>
-        <button class="close-notification" onclick="hideNotification()">×</button>
     </div>
 
     <header>
@@ -846,7 +949,7 @@
                     <h3 data-en="Custom Optimized OS" data-ar="نظام تشغيل محسن مخصص">Custom Optimized OS</h3>
                     <p data-en="Experience unparalleled performance with our custom Windows-based operating system. Meticulously optimized to deliver maximum FPS and eliminate system bloat for the ultimate gaming and productivity experience." data-ar="اختبر أداءً لا مثيل له مع نظام التشغيل المخصص المبني على ويندوز. محسن بدقة لتقديم أقصى معدل إطارات وإزالة البرامج غير المرغوبة للحصول على تجربة الألعاب والإنتاجية المثلى.">Experience unparalleled performance with our custom Windows-based operating system. Meticulously optimized to deliver maximum FPS and eliminate system bloat for the ultimate gaming and productivity experience.</p>
                     <div class="product-price" data-en="$39.99" data-ar="149.96 ريال">$39.99</div>
-                    <button class="buy-button" data-en="Buy Now" data-ar="اشتري الآن" onclick="openPaymentModal('custom-os', 'Custom Optimized OS', 3999)">Buy Now</button>
+                    <button class="buy-button" data-en="See More" data-ar="شاهد المزيد" onclick="showProductDetail('💻', 'CUSTOM OPTIMIZED<br>OS', ['Maximum FPS optimization', 'Zero system bloat', 'Gaming-focused kernel', 'Instant boot times', 'Lifetime updates'], 'https://your-payment-link-for-custom-os.com')">See More</button>
                 </div>
 
                 <div class="product-card fade-in">
@@ -854,15 +957,15 @@
                     <h3 data-en="Fortnite MultiTile & Reset Macro" data-ar="ماكرو الرسم">Fortnite MultiTile & Reset Macro</h3>
                     <p data-en="Dominate the battlefield with our advanced Fortnite macro suite. Features intelligent multi-tile building patterns and instant reset functionality to give you the competitive edge you need." data-ar="هيمن على ساحة المعركة مع مجموعة ماكرو فورتنايت المتقدمة. يتميز بأنماط بناء ذكية متعددة البلاط ووظيفة إعادة تعيين فورية لمنحك الميزة التنافسية التي تحتاجها.">Dominate the battlefield with our advanced Fortnite macro suite. Features intelligent multi-tile building patterns and instant reset functionality to give you the competitive edge you need.</p>
                     <div class="product-price" data-en="Pricing" data-ar="التسعير">Pricing</div>
-                    <a href="#pricing" class="buy-button" data-en="Check Pricing" data-ar="تحقق من التسعير" onclick="showPricingPage()">Check Pricing</a>
+                    <button class="buy-button" data-en="See More" data-ar="تحقق من التسعير" onclick="showPricingDetail()">See More</button>
                 </div>
 
                 <div class="product-card fade-in">
                     <div class="product-icon">⚡</div>
                     <h3 data-en="Professional PC Tweaking Service" data-ar="تويكات">Professional PC Tweaking Service</h3>
-                    <p data-en="Let our experts manually optimize your PC to its absolute fullest potential. Comprehensive system analysis, registry optimization, and performance tweaks tailored specifically to your hardware." data-ar="دع خبراؤنا يحسنون الكمبيوتر يدوياً إلى أقصى إمكاناته المطلقة. تحليل شامل للنظام وتحسين السجل وتعديلات الأداء المصممة خصيصاً لأجهزتك.">Let our experts manually optimize your PC to its absolute fullest potential. Comprehensive system analysis, registry optimization, and performance tweaks tailored specifically to your hardware.</p>
+                    <p data-en="Let our experts manually optimize your PC to its absolute fullest potential. Comprehensive system analysis, registry optimization, and performance tweaks tailored specifically to your hardware." data-ar="دع خبراءنا يحسنون الكمبيوتر يدوياً إلى أقصى إمكاناته المطلقة. تحليل شامل للنظام وتحسين السجل وتعديلات الأداء المصممة خصيصاً لأجهزتك.">Let our experts manually optimize your PC to its absolute fullest potential. Comprehensive system analysis, registry optimization, and performance tweaks tailored specifically to your hardware.</p>
                     <div class="product-price" data-en="$30.00" data-ar="112.50 ريال">$30.00</div>
-                    <button class="buy-button" data-en="Buy Now" data-ar="اشتري الآن" onclick="openPaymentModal('pc-tweaking', 'Professional PC Tweaking Service', 3000)">Buy Now</button>
+                    <button class="buy-button" data-en="See More" data-ar="اشتري الآن" onclick="showProductDetail('⚡', 'PROFESSIONAL PC<br>TWEAKING SERVICE', ['Expert manual optimization', 'Hardware-specific tweaks', 'Registry optimization', 'Performance analysis', '24/7 support included'], 'https://your-payment-link-for-pc-tweaking.com')">See More</button>
                 </div>
             </div>
         </div>
@@ -884,252 +987,143 @@
         </div>
     </footer>
 
-    <!-- Payment Modal -->
-    <div id="paymentModal" class="payment-modal">
-        <div class="payment-content">
-            <span class="close-btn" onclick="closePaymentModal()">&times;</span>
-            <h2 data-en="Complete Your Purchase" data-ar="أكمل عملية الشراء">Complete Your Purchase</h2>
-            
-            <div class="payment-summary">
-                <h3 id="payment-product-name">Product Name</h3>
-                <p><span data-en="Price:" data-ar="السعر:">Price:</span> <span id="payment-price">0 SAR</span></p>
-                <p><span data-en="Order ID:" data-ar="رقم الطلب:">Order ID:</span> <span id="payment-order-id">Will be generated</span></p>
-            </div>
-
-            <form class="payment-form" id="paymentForm">
-                <div class="form-group">
-                    <label for="customerName" data-en="Full Name" data-ar="الاسم الكامل">Full Name</label>
-                    <input type="text" id="customerName" name="customerName" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="customerEmail" data-en="Email Address" data-ar="البريد الإلكتروني">Email Address</label>
-                    <input type="email" id="customerEmail" name="customerEmail" required>
-                </div>
-
-                <div class="loading" id="paymentLoading">
-                    <div class="spinner"></div>
-                    <span data-en="Processing payment..." data-ar="جاري معالجة الدفع...">Processing payment...</span>
-                </div>
-
-                <div class="payment-buttons">
-                    <button type="submit" class="payment-btn primary" data-en="Proceed to Payment" data-ar="المتابعة للدفع">Proceed to Payment</button>
-                    <button type="button" class="payment-btn secondary" onclick="closePaymentModal()" data-en="Cancel" data-ar="إلغاء">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Pricing Page Modal -->
-    <div id="pricingModal" class="pricing-modal">
-        <div class="pricing-content">
-            <span class="close-btn" onclick="closePricingPage()">&times;</span>
-            <h2 data-en="Fortnite MultiTile & Reset Macro - Pricing" data-ar="ماكرو الرسم - التسعير">Fortnite MultiTile & Reset Macro - Pricing</h2>
-            <p data-en="Choose the license duration that best fits your needs:" data-ar="اختر مدة الترخيص التي تناسب احتياجاتك:">Choose the license duration that best fits your needs:</p>
-            
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <h3 data-en="1 Day Key" data-ar="مفتاح يوم واحد">1 Day Key</h3>
-                    <div class="price" data-en="$3.00" data-ar="11.25 ريال">$3.00</div>
-                    <ul>
-                        <li data-en="24 hours access" data-ar="وصول لمدة 24 ساعة">24 hours access</li>
-                        <li data-en="Full macro features" data-ar="جميع ميزات الماكرو">Full macro features</li>
-                        <li data-en="Discord support" data-ar="دعم الديسكورد">Discord support</li>
-                    </ul>
-                    <button class="pricing-btn" data-en="Purchase" data-ar="شراء" onclick="openPaymentModal('fortnite-macro-1day', 'Fortnite Macro - 1 Day', 300)">Purchase</button>
-                </div>
-
-                <div class="pricing-card">
-                    <h3 data-en="1 Week Key" data-ar="مفتاح أسبوع">1 Week Key</h3>
-                    <div class="price" data-en="$15.00" data-ar="56.25 ريال">$15.00</div>
-                    <ul>
-                        <li data-en="7 days access" data-ar="وصول لمدة 7 أيام">7 days access</li>
-                        <li data-en="Full macro features" data-ar="جميع ميزات الماكرو">Full macro features</li>
-                        <li data-en="Priority support" data-ar="دعم أولوية">Priority support</li>
-                    </ul>
-                    <button class="pricing-btn" data-en="Purchase" data-ar="شراء" onclick="openPaymentModal('fortnite-macro-1week', 'Fortnite Macro - 1 Week', 1500)">Purchase</button>
-                </div>
-
-                <div class="pricing-card popular">
-                    <div class="popular-badge" data-en="Most Popular" data-ar="الأكثر شعبية">Most Popular</div>
-                    <h3 data-en="1 Month Key" data-ar="مفتاح شهر">1 Month Key</h3>
-                    <div class="price" data-en="$30.00" data-ar="112.50 ريال">$30.00</div>
-                    <ul>
-                        <li data-en="30 days access" data-ar="وصول لمدة 30 يوم">30 days access</li>
-                        <li data-en="Full macro features" data-ar="جميع ميزات الماكرو">Full macro features</li>
-                        <li data-en="Priority support" data-ar="دعم أولوية">Priority support</li>
-                        <li data-en="Updates included" data-ar="التحديثات مشمولة">Updates included</li>
-                    </ul>
-                    <button class="pricing-btn" data-en="Purchase" data-ar="شراء" onclick="openPaymentModal('fortnite-macro-1month', 'Fortnite Macro - 1 Month', 3000)">Purchase</button>
-                </div>
-
-                <div class="pricing-card">
-                    <h3 data-en="Lifetime Key" data-ar="مفتاح مدى الحياة">Lifetime Key</h3>
-                    <div class="price" data-en="$60.00" data-ar="225.00 ريال">$60.00</div>
-                    <ul>
-                        <li data-en="Unlimited access" data-ar="وصول غير محدود">Unlimited access</li>
-                        <li data-en="All future updates" data-ar="جميع التحديثات المستقبلية">All future updates</li>
-                        <li data-en="VIP support" data-ar="دعم VIP">VIP support</li>
-                        <li data-en="Best value" data-ar="أفضل قيمة">Best value</li>
-                    </ul>
-                    <button class="pricing-btn" data-en="Purchase" data-ar="شراء" onclick="openPaymentModal('fortnite-macro-lifetime', 'Fortnite Macro - Lifetime', 6000)">Purchase</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // Configuration
-        const API_BASE_URL = 'https://api.kaidotweaks.com'; // Replace with your backend URL
-        
-        // Global variables
-        let currentProductId = '';
-        let currentProductName = '';
-        let currentProductPrice = 0;
+        // Global variables for current product
+        let currentProductData = {};
 
-        // Payment Modal Functions
-        function openPaymentModal(productId, productName, price) {
-            currentProductId = productId;
-            currentProductName = productName;
-            currentProductPrice = price;
+        // Regular product detail function
+        function showProductDetail(icon, title, features, paymentLink) {
+            // Store current product data
+            currentProductData = { icon, title, features, paymentLink };
             
-            document.getElementById('payment-product-name').textContent = productName;
-            document.getElementById('payment-price').textContent = `$${(price / 100).toFixed(2)}`;
-            document.getElementById('paymentModal').style.display = 'block';
+            // Update the detail card content
+            document.getElementById('detailProductIcon').textContent = icon;
+            document.getElementById('detailProductTitle').innerHTML = title;
+            
+            // Hide pricing panels and show features
+            document.getElementById('pricingPanels').classList.remove('visible');
+            document.getElementById('detailFeaturesList').classList.remove('hidden');
+            
+            // Update features list
+            const featuresList = document.getElementById('detailFeaturesList');
+            featuresList.innerHTML = '';
+            features.forEach((feature, index) => {
+                const li = document.createElement('li');
+                li.textContent = feature;
+                li.style.animationDelay = `${0.3 + (index * 0.1)}s`;
+                featuresList.appendChild(li);
+            });
+            
+            // Update purchase button link
+            document.getElementById('detailPurchaseBtn').href = paymentLink;
+            document.getElementById('detailPurchaseBtn').textContent = 'Get Started';
+            
+            // Show the overlay
+            showOverlay();
+        }
+
+        // Special pricing detail function for Fortnite Macro
+        function showPricingDetail() {
+            // Update the detail card content for Fortnite Macro
+            document.getElementById('detailProductIcon').textContent = '🎮';
+            document.getElementById('detailProductTitle').innerHTML = 'FORTNITE MULTITILE<br>& RESET MACRO';
+            
+            // Add pricing mode class for expanded height
+            document.getElementById('productDetailCard').classList.add('pricing-mode');
+            
+            // Hide features and show pricing panels
+            document.getElementById('detailFeaturesList').classList.add('hidden');
+            document.getElementById('pricingPanels').classList.add('visible');
+            
+            // Update purchase button to be hidden
+            document.getElementById('detailPurchaseBtn').style.display = 'none';
+            
+            // Show the overlay
+            showOverlay();
+        }
+
+        // Common overlay show function
+        function showOverlay() {
+            const overlay = document.getElementById('productDetailOverlay');
+            overlay.style.display = 'block';
             document.body.style.overflow = 'hidden';
             
-            closePricingPage(); // Close pricing modal if open
-        }
-
-        function closePaymentModal() {
-            document.getElementById('paymentModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-            document.getElementById('paymentForm').reset();
-            hideLoading();
-        }
-
-        // Show pricing modal
-        function showPricingPage() {
-            document.getElementById('pricingModal').style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        }
-
-        // Close pricing modal
-        function closePricingPage() {
-            document.getElementById('pricingModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-
-        // Payment form submission
-        document.getElementById('paymentForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const customerName = document.getElementById('customerName').value;
-            const customerEmail = document.getElementById('customerEmail').value;
-            
-            if (!customerName || !customerEmail) {
-                showNotification('Please fill in all required fields', 'error');
-                return;
-            }
-            
-            showLoading();
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/create-payment`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        productId: currentProductId,
-                        customerEmail: customerEmail,
-                        customerName: customerName
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Failed to create payment');
-                }
-                
-                const data = await response.json();
-                
-                // Redirect to Moyasar payment page
-                window.location.href = data.paymentUrl;
-                
-            } catch (error) {
-                console.error('Payment error:', error);
-                showNotification('Failed to process payment. Please try again.', 'error');
-                hideLoading();
-            }
-        });
-
-        // Notification functions
-        function showNotification(message, type = 'error') {
-            const notification = document.getElementById('notification');
-            const icon = document.getElementById('notification-icon');
-            const messageEl = document.getElementById('notification-message');
-            
-            messageEl.textContent = message;
-            
-            if (type === 'success') {
-                notification.classList.add('success');
-                icon.textContent = '✅';
-            } else {
-                notification.classList.remove('success');
-                icon.textContent = '❌';
-            }
-            
-            notification.style.display = 'block';
-            
-            // Auto hide after 5 seconds
+            // Add 3D mouse interaction
             setTimeout(() => {
-                hideNotification();
-            }, 5000);
+                add3DInteraction();
+            }, 700);
         }
 
-        function hideNotification() {
-            document.getElementById('notification').style.display = 'none';
-        }
-
-        function showLoading() {
-            document.getElementById('paymentLoading').style.display = 'block';
-            document.querySelector('.payment-buttons').style.display = 'none';
-        }
-
-        function hideLoading() {
-            document.getElementById('paymentLoading').style.display = 'none';
-            document.querySelector('.payment-buttons').style.display = 'flex';
-        }
-
-        // Check for payment status on page load
-        window.addEventListener('load', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const orderNumber = urlParams.get('order');
-            const status = urlParams.get('status');
+        function closeProductDetail() {
+            const overlay = document.getElementById('productDetailOverlay');
+            overlay.style.display = 'none';
+            document.body.style.overflow = 'auto';
             
-            if (orderNumber && status) {
-                if (status === 'success') {
-                    showNotification(`Payment successful! Your order number is: ${orderNumber}`, 'success');
-                } else if (status === 'failed') {
-                    showNotification('Payment failed. Please try again.', 'error');
-                }
-                
-                // Clean up URL
-                window.history.replaceState({}, document.title, window.location.pathname);
+            // Reset states
+            document.getElementById('productDetailCard').classList.remove('pricing-mode');
+            document.getElementById('pricingPanels').classList.remove('visible');
+            document.getElementById('detailFeaturesList').classList.remove('hidden');
+            document.getElementById('detailPurchaseBtn').style.display = 'flex';
+            
+            // Remove 3D interaction
+            remove3DInteraction();
+        }
+
+        // 3D Mouse Interaction
+        function add3DInteraction() {
+            const card = document.getElementById('productDetailCard');
+            const overlay = document.getElementById('productDetailOverlay');
+            
+            card.classList.add('interactive');
+            
+            overlay.addEventListener('mousemove', handle3DMove);
+            overlay.addEventListener('mouseleave', reset3D);
+        }
+
+        function remove3DInteraction() {
+            const card = document.getElementById('productDetailCard');
+            const overlay = document.getElementById('productDetailOverlay');
+            
+            card.classList.remove('interactive');
+            
+            overlay.removeEventListener('mousemove', handle3DMove);
+            overlay.removeEventListener('mouseleave', reset3D);
+            
+            // Reset transform
+            card.style.transform = 'translate(-50%, -50%) perspective(1000px) rotateX(0deg) rotateY(0deg)';
+        }
+
+        function handle3DMove(e) {
+            const card = document.getElementById('productDetailCard');
+            const rect = card.getBoundingClientRect();
+            const cardCenterX = rect.left + rect.width / 2;
+            const cardCenterY = rect.top + rect.height / 2;
+            
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            
+            const rotateX = (mouseY - cardCenterY) / 10;
+            const rotateY = (mouseX - cardCenterX) / 10;
+            
+            // Limit rotation
+            const maxRotation = 15;
+            const clampedRotateX = Math.max(-maxRotation, Math.min(maxRotation, -rotateX));
+            const clampedRotateY = Math.max(-maxRotation, Math.min(maxRotation, rotateY));
+            
+            card.style.transform = `translate(-50%, -50%) perspective(1000px) rotateX(${clampedRotateX}deg) rotateY(${clampedRotateY}deg)`;
+        }
+
+        function reset3D() {
+            const card = document.getElementById('productDetailCard');
+            card.style.transform = 'translate(-50%, -50%) perspective(1000px) rotateX(0deg) rotateY(0deg)';
+        }
+
+        // Close overlay when clicking outside the card
+        document.getElementById('productDetailOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeProductDetail();
             }
         });
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const paymentModal = document.getElementById('paymentModal');
-            const pricingModal = document.getElementById('pricingModal');
-            
-            if (event.target == paymentModal) {
-                closePaymentModal();
-            } else if (event.target == pricingModal) {
-                closePricingPage();
-            }
-        }
 
         // Language switching functionality
         let currentLang = 'en';
@@ -1237,8 +1231,13 @@
                 this.style.transform = 'translateY(0) scale(1)';
             });
         });
+
+        // Keyboard support for closing overlay
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeProductDetail();
+            }
+        });
     </script>
 </body>
 </html>
-
-
