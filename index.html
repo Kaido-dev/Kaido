@@ -20,6 +20,43 @@
             color: white;
             line-height: 1.6;
             overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated background elements */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 200, 255, 0.1) 0%, transparent 50%);
+            animation: backgroundShift 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { 
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0.3;
+            }
+            25% { 
+                transform: translate(-20px, -20px) rotate(1deg);
+                opacity: 0.5;
+            }
+            50% { 
+                transform: translate(20px, 20px) rotate(-1deg);
+                opacity: 0.3;
+            }
+            75% { 
+                transform: translate(-10px, 10px) rotate(0.5deg);
+                opacity: 0.4;
+            }
         }
 
         .container {
@@ -37,9 +74,46 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.95);
+            background: 
+                linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(26, 26, 26, 0.95) 100%),
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 200, 255, 0.15) 0%, transparent 50%);
             backdrop-filter: blur(15px);
             animation: fadeInOverlay 0.5s ease-out;
+        }
+
+        .product-detail-overlay::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 30% 60%, rgba(120, 119, 198, 0.08) 0%, transparent 60%),
+                radial-gradient(circle at 70% 30%, rgba(255, 119, 198, 0.08) 0%, transparent 60%);
+            animation: overlayBackgroundShift 15s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes overlayBackgroundShift {
+            0%, 100% { 
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0.4;
+            }
+            25% { 
+                transform: translate(-15px, -15px) rotate(1deg);
+                opacity: 0.6;
+            }
+            50% { 
+                transform: translate(15px, 15px) rotate(-1deg);
+                opacity: 0.4;
+            }
+            75% { 
+                transform: translate(-8px, 8px) rotate(0.5deg);
+                opacity: 0.5;
+            }
         }
 
         @keyframes fadeInOverlay {
@@ -266,11 +340,15 @@
         .detail-btn.primary {
             background: white;
             color: #000;
+            font-weight: 900;
+            letter-spacing: 2px;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
         }
 
         .detail-btn.primary:hover {
             background: #f0f0f0;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
         }
 
         .detail-btn.secondary {
@@ -294,7 +372,7 @@
         }
 
         .pricing-panel {
-            background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.15), rgba(0, 0, 0, 0.3));
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 12px;
             padding: 16px 12px;
@@ -308,10 +386,36 @@
             justify-content: space-between;
         }
 
+        .pricing-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, 
+                         rgba(255, 255, 255, 0.15) 0%, 
+                         rgba(255, 255, 255, 0.08) 50%, 
+                         transparent 80%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+            border-radius: 12px;
+        }
+
+        .pricing-panel:hover::before {
+            opacity: 1;
+        }
+
+        .pricing-panel:hover::before {
+            opacity: 1;
+        }
+
         .pricing-panel:hover {
             transform: translateY(-3px);
             border-color: rgba(255, 255, 255, 0.4);
-            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.15);
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.25));
         }
 
         .pricing-panel.popular {
@@ -359,15 +463,15 @@
 
         .pricing-panel-btn {
             width: 100%;
-            padding: 8px 16px;
-            background: transparent;
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 16px;
+            background: white;
+            color: #000;
+            border: 2px solid white;
             border-radius: 15px;
-            font-size: 10px;
-            font-weight: bold;
+            font-size: 12px;
+            font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
@@ -375,11 +479,13 @@
             align-items: center;
             justify-content: center;
             margin-top: auto;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
         }
 
         .pricing-panel-btn:hover {
-            background: white;
-            color: #000;
+            background: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
         }
 
         /* Adjusted spacing for pricing mode */
@@ -527,8 +633,37 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
-            animation: float 3s ease-in-out infinite;
+            animation: float 3s ease-in-out infinite, pulse 4s ease-in-out infinite;
             backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: logoRotate 3s linear infinite;
+        }
+
+        @keyframes logoRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { 
+                box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
+                border-color: rgba(255, 255, 255, 0.2);
+            }
+            50% { 
+                box-shadow: 0 25px 50px rgba(255, 255, 255, 0.2);
+                border-color: rgba(255, 255, 255, 0.4);
+            }
         }
 
         .k-logo {
@@ -621,10 +756,20 @@
             border-radius: 20px;
             padding: 40px;
             text-align: center;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             backdrop-filter: blur(10px);
             position: relative;
             overflow: hidden;
+            animation: cardGlow 6s ease-in-out infinite;
+        }
+
+        @keyframes cardGlow {
+            0%, 100% { 
+                box-shadow: 0 10px 30px rgba(255, 255, 255, 0.05);
+            }
+            50% { 
+                box-shadow: 0 15px 40px rgba(255, 255, 255, 0.1);
+            }
         }
 
         .product-card::before {
@@ -634,8 +779,25 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.5s ease;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .product-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            animation: cardRotate 15s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes cardRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .product-card:hover::before {
@@ -643,15 +805,15 @@
         }
 
         .product-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 50px rgba(255, 255, 255, 0.1);
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 25px 60px rgba(255, 255, 255, 0.15);
             border-color: rgba(255, 255, 255, 0.3);
         }
 
         .product-icon {
             width: 80px;
             height: 80px;
-            background: white;
+            background: linear-gradient(145deg, #ffffff, #e0e0e0);
             border-radius: 50%;
             margin: 0 auto 30px;
             display: flex;
@@ -659,6 +821,16 @@
             justify-content: center;
             font-size: 2rem;
             color: #000;
+            animation: iconBounce 4s ease-in-out infinite;
+            position: relative;
+            z-index: 10;
+        }
+
+        @keyframes iconBounce {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            25% { transform: translateY(-5px) scale(1.05); }
+            50% { transform: translateY(0px) scale(1); }
+            75% { transform: translateY(-3px) scale(1.02); }
         }
 
         .product-card h3 {
@@ -864,32 +1036,32 @@
 
                 <!-- Pricing Panels for Fortnite Macro -->
                 <div class="pricing-panels" id="pricingPanels">
-                    <div class="pricing-panel" onclick="window.open('https://your-payment-link-1day.com', '_blank')">
+                    <div class="pricing-panel" onclick="window.open('https://payment.paylink.sa/pay/product/24472781000150152', '_blank')">
                         <h4>1 Day Key</h4>
-                        <div class="price">$3.00</div>
+                        <div class="price">$2.99</div>
                         <div class="duration">24 Hours Access</div>
-                        <a href="https://your-payment-link-1day.com" class="pricing-panel-btn" onclick="event.stopPropagation()">Purchase</a>
+                        <a href="https://payment.paylink.sa/pay/product/24472781000150152" class="pricing-panel-btn" onclick="event.stopPropagation()">PURCHASE</a>
                     </div>
                     
-                    <div class="pricing-panel" onclick="window.open('https://your-payment-link-1week.com', '_blank')">
+                    <div class="pricing-panel" onclick="window.open('https://payment.paylink.sa/pay/product/24472811000150152', '_blank')">
                         <h4>1 Week Key</h4>
-                        <div class="price">$15.00</div>
+                        <div class="price">$6.99</div>
                         <div class="duration">7 Days Access</div>
-                        <a href="https://your-payment-link-1week.com" class="pricing-panel-btn" onclick="event.stopPropagation()">Purchase</a>
+                        <a href="https://payment.paylink.sa/pay/product/24472811000150152" class="pricing-panel-btn" onclick="event.stopPropagation()">PURCHASE</a>
                     </div>
                     
-                    <div class="pricing-panel popular" onclick="window.open('https://your-payment-link-1month.com', '_blank')">
+                    <div class="pricing-panel popular" onclick="window.open('https://payment.paylink.sa/pay/product/24472821000150152', '_blank')">
                         <h4>1 Month Key</h4>
-                        <div class="price">$30.00</div>
+                        <div class="price">$14.99</div>
                         <div class="duration">30 Days Access</div>
-                        <a href="https://your-payment-link-1month.com" class="pricing-panel-btn" onclick="event.stopPropagation()">Purchase</a>
+                        <a href="https://payment.paylink.sa/pay/product/24472821000150152" class="pricing-panel-btn" onclick="event.stopPropagation()">PURCHASE</a>
                     </div>
                     
-                    <div class="pricing-panel" onclick="window.open('https://your-payment-link-lifetime.com', '_blank')">
+                    <div class="pricing-panel" onclick="window.open('https://payment.paylink.sa/pay/product/24472831000150152', '_blank')">
                         <h4>Lifetime Key</h4>
-                        <div class="price">$60.00</div>
+                        <div class="price">$29.99</div>
                         <div class="duration">Unlimited Access</div>
-                        <a href="https://your-payment-link-lifetime.com" class="pricing-panel-btn" onclick="event.stopPropagation()">Purchase</a>
+                        <a href="https://payment.paylink.sa/pay/product/24472831000150152" class="pricing-panel-btn" onclick="event.stopPropagation()">PURCHASE</a>
                     </div>
                 </div>
                 
@@ -899,7 +1071,7 @@
                 
                 <div class="detail-actions">
                     <a href="#" class="detail-btn primary" id="detailPurchaseBtn">
-                        Get Started
+                        PURCHASE NOW
                     </a>
                     <button class="detail-btn secondary" onclick="closeProductDetail()">
                         Close
@@ -949,7 +1121,7 @@
                     <h3 data-en="Custom Optimized OS" data-ar="نظام تشغيل محسن مخصص">Custom Optimized OS</h3>
                     <p data-en="Experience unparalleled performance with our custom Windows-based operating system. Meticulously optimized to deliver maximum FPS and eliminate system bloat for the ultimate gaming and productivity experience." data-ar="اختبر أداءً لا مثيل له مع نظام التشغيل المخصص المبني على ويندوز. محسن بدقة لتقديم أقصى معدل إطارات وإزالة البرامج غير المرغوبة للحصول على تجربة الألعاب والإنتاجية المثلى.">Experience unparalleled performance with our custom Windows-based operating system. Meticulously optimized to deliver maximum FPS and eliminate system bloat for the ultimate gaming and productivity experience.</p>
                     <div class="product-price" data-en="$39.99" data-ar="149.96 ريال">$39.99</div>
-                    <button class="buy-button" data-en="See More" data-ar="شاهد المزيد" onclick="showProductDetail('💻', 'CUSTOM OPTIMIZED<br>OS', ['Maximum FPS optimization', 'Zero system bloat', 'Gaming-focused kernel', 'Instant boot times', 'Lifetime updates'], 'https://your-payment-link-for-custom-os.com')">See More</button>
+                    <button class="buy-button" data-en="See More" data-ar="شاهد المزيد" onclick="showProductDetail('💻', 'CUSTOM OPTIMIZED<br>OS', ['Maximum FPS optimization', 'Zero system bloat', 'Gaming-focused kernel', 'Instant boot times', 'Lifetime updates'], 'https://payment.paylink.sa/pay/product/24472751000150152')">See More</button>
                 </div>
 
                 <div class="product-card fade-in">
@@ -964,8 +1136,8 @@
                     <div class="product-icon">⚡</div>
                     <h3 data-en="Professional PC Tweaking Service" data-ar="تويكات">Professional PC Tweaking Service</h3>
                     <p data-en="Let our experts manually optimize your PC to its absolute fullest potential. Comprehensive system analysis, registry optimization, and performance tweaks tailored specifically to your hardware." data-ar="دع خبراءنا يحسنون الكمبيوتر يدوياً إلى أقصى إمكاناته المطلقة. تحليل شامل للنظام وتحسين السجل وتعديلات الأداء المصممة خصيصاً لأجهزتك.">Let our experts manually optimize your PC to its absolute fullest potential. Comprehensive system analysis, registry optimization, and performance tweaks tailored specifically to your hardware.</p>
-                    <div class="product-price" data-en="$30.00" data-ar="112.50 ريال">$30.00</div>
-                    <button class="buy-button" data-en="See More" data-ar="اشتري الآن" onclick="showProductDetail('⚡', 'PROFESSIONAL PC<br>TWEAKING SERVICE', ['Expert manual optimization', 'Hardware-specific tweaks', 'Registry optimization', 'Performance analysis', '24/7 support included'], 'https://your-payment-link-for-pc-tweaking.com')">See More</button>
+                    <div class="product-price" data-en="$29.99" data-ar="112.46 ريال">$29.99</div>
+                    <button class="buy-button" data-en="See More" data-ar="اشتري الآن" onclick="showProductDetail('⚡', 'PROFESSIONAL PC<br>TWEAKING SERVICE', ['Expert manual optimization', 'Hardware-specific tweaks', 'Registry optimization', 'Performance analysis', '24/7 support included'], 'https://payment.paylink.sa/pay/product/24472711000150152')">See More</button>
                 </div>
             </div>
         </div>
@@ -1040,6 +1212,11 @@
             
             // Show the overlay
             showOverlay();
+            
+            // Add individual panel mouse listeners after a short delay to ensure panels are rendered
+            setTimeout(() => {
+                addPanelMouseListeners();
+            }, 100);
         }
 
         // Common overlay show function
@@ -1102,15 +1279,64 @@
             const mouseX = e.clientX;
             const mouseY = e.clientY;
             
-            const rotateX = (mouseY - cardCenterY) / 10;
-            const rotateY = (mouseX - cardCenterX) / 10;
+            const rotateX = (mouseY - cardCenterY) / 20;
+            const rotateY = (mouseX - cardCenterX) / 20;
             
             // Limit rotation
-            const maxRotation = 15;
+            const maxRotation = 8;
             const clampedRotateX = Math.max(-maxRotation, Math.min(maxRotation, -rotateX));
             const clampedRotateY = Math.max(-maxRotation, Math.min(maxRotation, rotateY));
             
             card.style.transform = `translate(-50%, -50%) perspective(1000px) rotateX(${clampedRotateX}deg) rotateY(${clampedRotateY}deg)`;
+            
+            // Update mouse position for pricing panels glow effect
+            updatePanelGlow(mouseX, mouseY);
+        }
+
+        function updatePanelGlow(mouseX, mouseY) {
+            const pricingPanels = document.querySelectorAll('.pricing-panel');
+            pricingPanels.forEach(panel => {
+                const panelRect = panel.getBoundingClientRect();
+                
+                // Calculate relative position within panel (0-100%)
+                const relativeX = ((mouseX - panelRect.left) / panelRect.width) * 100;
+                const relativeY = ((mouseY - panelRect.top) / panelRect.height) * 100;
+                
+                // Always update the mouse position, even if outside the panel
+                // Clamp the values to ensure they stay within reasonable bounds for the effect
+                const clampedX = Math.max(-50, Math.min(150, relativeX));
+                const clampedY = Math.max(-50, Math.min(150, relativeY));
+                
+                panel.style.setProperty('--mouse-x', `${clampedX}%`);
+                panel.style.setProperty('--mouse-y', `${clampedY}%`);
+                
+                // Show/hide glow based on proximity to panel
+                const isNear = relativeX >= -20 && relativeX <= 120 && relativeY >= -20 && relativeY <= 120;
+                panel.style.setProperty('--glow-opacity', isNear ? '1' : '0');
+            });
+        }
+
+        // Add individual panel mouse listeners for smoother tracking
+        function addPanelMouseListeners() {
+            const pricingPanels = document.querySelectorAll('.pricing-panel');
+            pricingPanels.forEach(panel => {
+                panel.addEventListener('mouseenter', function() {
+                    this.style.setProperty('--glow-opacity', '1');
+                });
+                
+                panel.addEventListener('mouseleave', function() {
+                    this.style.setProperty('--glow-opacity', '0');
+                });
+                
+                panel.addEventListener('mousemove', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const relativeX = ((e.clientX - rect.left) / rect.width) * 100;
+                    const relativeY = ((e.clientY - rect.top) / rect.height) * 100;
+                    
+                    this.style.setProperty('--mouse-x', `${relativeX}%`);
+                    this.style.setProperty('--mouse-y', `${relativeY}%`);
+                });
+            });
         }
 
         function reset3D() {
@@ -1188,38 +1414,117 @@
             observer.observe(el);
         });
 
-        // Add some interactive particles effect
+        // Enhanced particle system with different types
         function createParticle() {
             const particle = document.createElement('div');
-            particle.style.cssText = `
+            const types = ['dot', 'line', 'glow'];
+            const type = types[Math.floor(Math.random() * types.length)];
+            
+            let particleStyles = `
                 position: fixed;
-                width: 2px;
-                height: 2px;
-                background: white;
                 pointer-events: none;
-                opacity: 0.5;
-                border-radius: 50%;
                 z-index: 1;
             `;
             
+            switch(type) {
+                case 'dot':
+                    particleStyles += `
+                        width: ${Math.random() * 3 + 1}px;
+                        height: ${Math.random() * 3 + 1}px;
+                        background: white;
+                        border-radius: 50%;
+                        opacity: ${Math.random() * 0.7 + 0.3};
+                    `;
+                    break;
+                case 'line':
+                    particleStyles += `
+                        width: ${Math.random() * 20 + 10}px;
+                        height: 1px;
+                        background: linear-gradient(90deg, transparent, white, transparent);
+                        opacity: ${Math.random() * 0.5 + 0.2};
+                    `;
+                    break;
+                case 'glow':
+                    particleStyles += `
+                        width: ${Math.random() * 6 + 2}px;
+                        height: ${Math.random() * 6 + 2}px;
+                        background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 70%);
+                        border-radius: 50%;
+                        opacity: ${Math.random() * 0.8 + 0.2};
+                    `;
+                    break;
+            }
+            
+            particle.style.cssText = particleStyles;
             particle.style.left = Math.random() * window.innerWidth + 'px';
             particle.style.top = window.innerHeight + 'px';
             
             document.body.appendChild(particle);
             
+            const duration = Math.random() * 4000 + 3000;
+            const drift = (Math.random() - 0.5) * 100;
+            
             const animation = particle.animate([
-                { transform: 'translateY(0px)', opacity: 0.5 },
-                { transform: `translateY(-${window.innerHeight + 100}px)`, opacity: 0 }
+                { 
+                    transform: 'translateY(0px) translateX(0px)', 
+                    opacity: particle.style.opacity 
+                },
+                { 
+                    transform: `translateY(-${window.innerHeight + 100}px) translateX(${drift}px)`, 
+                    opacity: 0 
+                }
             ], {
-                duration: Math.random() * 3000 + 2000,
+                duration: duration,
                 easing: 'linear'
             });
             
             animation.onfinish = () => particle.remove();
         }
 
-        // Create particles periodically
-        setInterval(createParticle, 300);
+        // Create particles more frequently with variety
+        setInterval(createParticle, 200);
+        
+        // Add floating orbs in the background
+        function createFloatingOrb() {
+            const orb = document.createElement('div');
+            orb.style.cssText = `
+                position: fixed;
+                width: ${Math.random() * 60 + 20}px;
+                height: ${Math.random() * 60 + 20}px;
+                background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 1;
+            `;
+            
+            orb.style.left = Math.random() * window.innerWidth + 'px';
+            orb.style.top = Math.random() * window.innerHeight + 'px';
+            
+            document.body.appendChild(orb);
+            
+            const animation = orb.animate([
+                { 
+                    transform: 'translate(0, 0) scale(0)',
+                    opacity: 0
+                },
+                { 
+                    transform: `translate(${(Math.random() - 0.5) * 200}px, ${(Math.random() - 0.5) * 200}px) scale(1)`,
+                    opacity: 1
+                },
+                { 
+                    transform: `translate(${(Math.random() - 0.5) * 400}px, ${(Math.random() - 0.5) * 400}px) scale(0)`,
+                    opacity: 0
+                }
+            ], {
+                duration: Math.random() * 10000 + 8000,
+                easing: 'ease-in-out'
+            });
+            
+            animation.onfinish = () => orb.remove();
+        }
+
+        // Create floating orbs occasionally
+        setInterval(createFloatingOrb, 3000);
 
         // Add hover effect to product cards
         document.querySelectorAll('.product-card').forEach(card => {
